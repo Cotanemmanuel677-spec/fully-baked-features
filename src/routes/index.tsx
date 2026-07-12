@@ -1,24 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImage from "@/assets/hero-sugu.jpg";
+import { sectors } from "@/lib/sectors";
 
 export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const sectors = [
-  { emoji: "🚌", name: "Transport & Mobilité", desc: "VTC, livreurs, loueurs de véhicules." },
-  { emoji: "🌾", name: "Agriculture & Vivrier", desc: "Producteurs, maraîchers, marché de gros." },
-  { emoji: "🩺", name: "Santé", desc: "Cliniques, cabinets, carnet santé numérique." },
-  { emoji: "🏠", name: "Immobilier", desc: "Agences, locations, ventes, gestion locative." },
-  { emoji: "💼", name: "Emploi & Recrutement", desc: "Offres, CVthèque, freelance, stage." },
-  { emoji: "🛠️", name: "Services & Artisans", desc: "Prestataires de proximité, devis, RDV." },
-  { emoji: "🛍️", name: "Vente de produits", desc: "E-commerce, catalogue, stocks, variantes." },
-  { emoji: "🍽️", name: "Réservation & Alimentation", desc: "Restaurants, hôtels, traiteurs." },
-  { emoji: "🎓", name: "Éducation & Formation", desc: "Écoles, portail parents, formateurs." },
-  { emoji: "🎉", name: "Événementiel & Loisirs", desc: "Billetterie, salles, prestataires." },
-  { emoji: "🏗️", name: "Construction & BTP", desc: "Chantiers, devis, location d'engins." },
-  { emoji: "⚡", name: "Énergie & Services Publics", desc: "Carburant, recharge, solaire." },
-];
 
 const plans = [
   {
@@ -261,16 +248,30 @@ function Sectors() {
 
       <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sectors.map((s) => (
-          <article
-            key={s.name}
-            className="group rounded-2xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-soft"
+          <Link
+            key={s.slug}
+            to="/secteurs/$slug"
+            params={{ slug: s.slug }}
+            className="group rounded-2xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-soft flex flex-col"
           >
-            <div className="text-2xl">{s.emoji}</div>
+            <div className="flex items-center justify-between">
+              <span className="text-2xl">{s.emoji}</span>
+              <span className="text-[11px] px-2 py-1 rounded-full border text-muted-foreground">
+                {s.commissionRate}
+              </span>
+            </div>
             <h3 className="mt-3 text-lg font-display">{s.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{s.desc}</p>
-          </article>
+            <p className="text-sm text-muted-foreground mt-1 flex-1">{s.short}</p>
+            <span
+              className="mt-3 text-sm font-medium inline-flex items-center gap-1"
+              style={{ color: "var(--color-teal)" }}
+            >
+              Découvrir →
+            </span>
+          </Link>
         ))}
       </div>
+
     </section>
   );
 }
