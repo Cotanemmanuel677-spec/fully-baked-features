@@ -10,11 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SecteursRouteImport } from './routes/secteurs'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SecteursIndexRouteImport } from './routes/secteurs.index'
+import { Route as SecteursSlugRouteImport } from './routes/secteurs.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecteursRoute = SecteursRouteImport.update({
+  id: '/secteurs',
+  path: '/secteurs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,30 +30,60 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SecteursIndexRoute = SecteursIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SecteursRoute,
+} as any)
+const SecteursSlugRoute = SecteursSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => SecteursRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/secteurs': typeof SecteursRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/secteurs/$slug': typeof SecteursSlugRoute
+  '/secteurs/': typeof SecteursIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/secteurs/$slug': typeof SecteursSlugRoute
+  '/secteurs': typeof SecteursIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/secteurs': typeof SecteursRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/secteurs/$slug': typeof SecteursSlugRoute
+  '/secteurs/': typeof SecteursIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/secteurs'
+    | '/sitemap.xml'
+    | '/secteurs/$slug'
+    | '/secteurs/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml'
-  id: '__root__' | '/' | '/sitemap.xml'
+  to: '/' | '/sitemap.xml' | '/secteurs/$slug' | '/secteurs'
+  id:
+    | '__root__'
+    | '/'
+    | '/secteurs'
+    | '/sitemap.xml'
+    | '/secteurs/$slug'
+    | '/secteurs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SecteursRoute: typeof SecteursRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -58,6 +96,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/secteurs': {
+      id: '/secteurs'
+      path: '/secteurs'
+      fullPath: '/secteurs'
+      preLoaderRoute: typeof SecteursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +110,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/secteurs/': {
+      id: '/secteurs/'
+      path: '/'
+      fullPath: '/secteurs/'
+      preLoaderRoute: typeof SecteursIndexRouteImport
+      parentRoute: typeof SecteursRoute
+    }
+    '/secteurs/$slug': {
+      id: '/secteurs/$slug'
+      path: '/$slug'
+      fullPath: '/secteurs/$slug'
+      preLoaderRoute: typeof SecteursSlugRouteImport
+      parentRoute: typeof SecteursRoute
+    }
   }
 }
 
+interface SecteursRouteChildren {
+  SecteursSlugRoute: typeof SecteursSlugRoute
+  SecteursIndexRoute: typeof SecteursIndexRoute
+}
+
+const SecteursRouteChildren: SecteursRouteChildren = {
+  SecteursSlugRoute: SecteursSlugRoute,
+  SecteursIndexRoute: SecteursIndexRoute,
+}
+
+const SecteursRouteWithChildren = SecteursRoute._addFileChildren(
+  SecteursRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SecteursRoute: SecteursRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
