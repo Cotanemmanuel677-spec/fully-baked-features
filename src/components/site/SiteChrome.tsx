@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 export function SiteChrome({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 }
 
 export function SiteHeader() {
+  const { user, loading } = useAuth();
   return (
     <header className="container-page flex items-center justify-between pt-6 pb-2">
       <Link to="/" className="flex items-center gap-2">
@@ -42,8 +44,17 @@ export function SiteHeader() {
         </Link>
       </nav>
       <div className="flex items-center gap-2">
-        <a href="#cta" className="btn-ghost hidden sm:inline-flex">Se connecter</a>
-        <a href="#cta" className="btn-primary">Créer ma boutique</a>
+        {loading ? null : user ? (
+          <>
+            <Link to="/tableau-de-bord" className="btn-ghost hidden sm:inline-flex">Mon espace</Link>
+            <Link to="/creer-ma-boutique" className="btn-primary">+ Boutique</Link>
+          </>
+        ) : (
+          <>
+            <Link to="/auth" className="btn-ghost hidden sm:inline-flex">Se connecter</Link>
+            <Link to="/auth" className="btn-primary">Créer ma boutique</Link>
+          </>
+        )}
       </div>
     </header>
   );
