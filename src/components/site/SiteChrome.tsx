@@ -51,8 +51,8 @@ export function SiteHeader() {
           </>
         ) : (
           <>
-            <Link to="/auth" className="btn-ghost hidden sm:inline-flex">Se connecter</Link>
-            <Link to="/auth" className="btn-primary">Créer ma boutique</Link>
+            <Link to="/auth" className="btn-ghost">Se connecter</Link>
+            <Link to="/auth" className="btn-primary hidden sm:inline-flex">Créer ma boutique</Link>
           </>
         )}
       </div>
