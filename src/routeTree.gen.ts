@@ -11,9 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SecteursRouteImport } from './routes/secteurs'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SecteursIndexRouteImport } from './routes/secteurs.index'
 import { Route as SecteursSlugRouteImport } from './routes/secteurs.$slug'
+import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
+import { Route as AuthenticatedCreerMaBoutiqueRouteImport } from './routes/_authenticated/creer-ma-boutique'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -23,6 +27,15 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SecteursRoute = SecteursRouteImport.update({
   id: '/secteurs',
   path: '/secteurs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -40,25 +53,47 @@ const SecteursSlugRoute = SecteursSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => SecteursRoute,
 } as any)
+const AuthenticatedTableauDeBordRoute =
+  AuthenticatedTableauDeBordRouteImport.update({
+    id: '/tableau-de-bord',
+    path: '/tableau-de-bord',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCreerMaBoutiqueRoute =
+  AuthenticatedCreerMaBoutiqueRouteImport.update({
+    id: '/creer-ma-boutique',
+    path: '/creer-ma-boutique',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/secteurs': typeof SecteursRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/creer-ma-boutique': typeof AuthenticatedCreerMaBoutiqueRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/secteurs/$slug': typeof SecteursSlugRoute
   '/secteurs/': typeof SecteursIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/creer-ma-boutique': typeof AuthenticatedCreerMaBoutiqueRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/secteurs/$slug': typeof SecteursSlugRoute
   '/secteurs': typeof SecteursIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/secteurs': typeof SecteursRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/creer-ma-boutique': typeof AuthenticatedCreerMaBoutiqueRoute
+  '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/secteurs/$slug': typeof SecteursSlugRoute
   '/secteurs/': typeof SecteursIndexRoute
 }
@@ -66,23 +101,39 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/secteurs'
     | '/sitemap.xml'
+    | '/creer-ma-boutique'
+    | '/tableau-de-bord'
     | '/secteurs/$slug'
     | '/secteurs/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml' | '/secteurs/$slug' | '/secteurs'
+  to:
+    | '/'
+    | '/auth'
+    | '/sitemap.xml'
+    | '/creer-ma-boutique'
+    | '/tableau-de-bord'
+    | '/secteurs/$slug'
+    | '/secteurs'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/secteurs'
     | '/sitemap.xml'
+    | '/_authenticated/creer-ma-boutique'
+    | '/_authenticated/tableau-de-bord'
     | '/secteurs/$slug'
     | '/secteurs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   SecteursRoute: typeof SecteursRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -101,6 +152,20 @@ declare module '@tanstack/react-router' {
       path: '/secteurs'
       fullPath: '/secteurs'
       preLoaderRoute: typeof SecteursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -124,8 +189,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecteursSlugRouteImport
       parentRoute: typeof SecteursRoute
     }
+    '/_authenticated/tableau-de-bord': {
+      id: '/_authenticated/tableau-de-bord'
+      path: '/tableau-de-bord'
+      fullPath: '/tableau-de-bord'
+      preLoaderRoute: typeof AuthenticatedTableauDeBordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/creer-ma-boutique': {
+      id: '/_authenticated/creer-ma-boutique'
+      path: '/creer-ma-boutique'
+      fullPath: '/creer-ma-boutique'
+      preLoaderRoute: typeof AuthenticatedCreerMaBoutiqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCreerMaBoutiqueRoute: typeof AuthenticatedCreerMaBoutiqueRoute
+  AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCreerMaBoutiqueRoute: AuthenticatedCreerMaBoutiqueRoute,
+  AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface SecteursRouteChildren {
   SecteursSlugRoute: typeof SecteursSlugRoute
@@ -143,6 +235,8 @@ const SecteursRouteWithChildren = SecteursRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   SecteursRoute: SecteursRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
