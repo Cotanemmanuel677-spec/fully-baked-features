@@ -324,6 +324,104 @@ function Sectors() {
   );
 }
 
+function MerchantVoices() {
+  const voices = [
+    {
+      quote: "Avant SUGU, je perdais 3 clients sur 10 qui ne payaient jamais à la livraison. Aujourd'hui, l'argent est bloqué avant que je bouge.",
+      name: "Aïcha K.",
+      trade: "Marché vivrier",
+      city: "Adjamé",
+      tone: "teal",
+    },
+    {
+      quote: "Le sous-domaine ma-boutique.sugu.ci, ça fait pro. Mes clients à l'étranger commandent sans me connaître avant.",
+      name: "Kouamé D.",
+      trade: "Artisan bois",
+      city: "Bouaké",
+      tone: "terracotta",
+    },
+    {
+      quote: "Wave, Orange, MTN — tout passe sur la même boutique. Je ne cours plus après les preuves de paiement.",
+      name: "Mariam T.",
+      trade: "Boutique wax",
+      city: "Yopougon",
+      tone: "ochre",
+    },
+  ];
+
+  const bg = (tone: string) =>
+    tone === "teal" ? "var(--color-teal-deep)" :
+    tone === "terracotta" ? "var(--color-terracotta)" :
+    "var(--color-ochre)";
+
+  return (
+    <section className="py-24" style={{ background: "var(--color-ink)", color: "var(--color-parchment)" }}>
+      <div className="container-page">
+        <div className="masthead-rule mb-10" style={{ color: "oklch(0.85 0.02 85 / 0.6)" }}>
+          <span>N° 02</span>
+          <span>Voix du marché</span>
+          <span>Témoignages certifiés</span>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
+          <div>
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              Ceux qui vendent
+              <br />
+              <em style={{ color: "var(--color-terracotta)" }}>en dorment mieux.</em>
+            </h2>
+            <p className="mt-6 text-lg opacity-80 max-w-md">
+              +2 000 marchands utilisent SUGU chaque semaine.
+              Voici trois voix — parmi douze secteurs, quatre villes, une seule promesse.
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              <div className="stamp" style={{ background: "transparent", color: "var(--color-terracotta)" }}>
+                Escrow · BCEAO · 2013-450
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            {voices.map((v, i) => (
+              <figure
+                key={v.name}
+                className="rounded-2xl p-6 md:p-8 relative"
+                style={{
+                  background: bg(v.tone),
+                  color: v.tone === "ochre" ? "var(--color-ink)" : "var(--color-parchment)",
+                  transform: i % 2 === 0 ? "translateX(0)" : "translateX(2rem)",
+                }}
+              >
+                <div className="text-5xl font-display leading-none opacity-40 absolute top-4 left-5" aria-hidden>"</div>
+                <blockquote className="font-display text-xl md:text-2xl leading-snug pl-8">
+                  {v.quote}
+                </blockquote>
+                <figcaption className="mt-5 pl-8 flex items-center gap-3 text-sm">
+                  <span
+                    className="inline-flex h-9 w-9 rounded-full items-center justify-center font-display"
+                    style={{
+                      background: "oklch(1 0 0 / 0.15)",
+                      color: "inherit",
+                    }}
+                  >
+                    {v.name[0]}
+                  </span>
+                  <span>
+                    <span className="font-semibold">{v.name}</span>
+                    <span className="opacity-70"> · {v.trade} · {v.city}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+
 function HowItWorks() {
   const steps = [
     {
