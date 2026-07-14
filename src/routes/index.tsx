@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImage from "@/assets/hero-sugu.jpg";
+import heroIllustration from "@/assets/hero-sugu-illustration.jpg";
 import { sectors } from "@/lib/sectors";
+
 
 export const Route = createFileRoute("/")({
   component: Landing,
