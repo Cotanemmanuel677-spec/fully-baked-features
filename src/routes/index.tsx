@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImage from "@/assets/hero-sugu.jpg";
+import heroIllustration from "@/assets/hero-sugu-illustration.jpg";
 import { sectors } from "@/lib/sectors";
+
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -74,8 +75,10 @@ function Landing() {
     <div className="surface-parchment min-h-screen">
       <Header />
       <Hero />
+      <TickerTape />
       <TrustStrip />
       <Sectors />
+      <MerchantVoices />
       <HowItWorks />
       <Pricing />
       <FinalCta />
@@ -125,97 +128,142 @@ function Logo() {
 
 function Hero() {
   return (
-    <section className="container-page grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-center pt-10 pb-20 lg:pt-16 lg:pb-28">
-      <div>
-        <span className="chip">
-          <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-teal)" }} />
-          Plateforme SaaS ivoirienne · 100 % Mobile Money
-        </span>
-        <h1 className="mt-5 text-4xl md:text-6xl leading-[1.02] font-display">
-          Votre business,
-          <br />
-          <span style={{ color: "var(--color-teal)" }}>digitalisé</span> et{" "}
-          <em className="not-italic" style={{ color: "var(--color-ochre)" }}>sécurisé.</em>
-        </h1>
-        <p className="mt-6 text-lg text-muted-foreground max-w-xl">
-          SUGU donne à chaque entrepreneur ivoirien une boutique en ligne clé en main :
-          paiements sous séquestre, gestion sectorielle, protection contre les impayés.
-          Vous vendez, on protège l'argent jusqu'à la livraison.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <a href="#cta" className="btn-primary">
-            Créer ma boutique — gratuit
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-          </a>
-          <a href="#fonctionnement" className="btn-ghost">Voir comment ça marche</a>
-        </div>
-        <p className="mt-4 text-xs text-muted-foreground">
-          Aucun paiement demandé · Sous-domaine <span className="font-medium">maboutique.sugu.ci</span> offert
-        </p>
+    <section className="container-page pt-8 pb-16 lg:pb-24">
+      {/* Editorial masthead */}
+      <div className="masthead-rule mb-8">
+        <span>N° 01</span>
+        <span>Édition Abidjan</span>
+        <span>La confiance digitalisée</span>
       </div>
 
-      <div className="relative">
-        <div
-          className="absolute -inset-6 rounded-[2rem] -z-10"
-          style={{
-            background:
-              "radial-gradient(60% 60% at 30% 30%, oklch(0.8 0.08 190 / 0.4), transparent 70%)",
-          }}
-        />
-        <div className="rounded-3xl overflow-hidden border shadow-soft bg-card">
-          <img
-            src={heroImage}
-            alt="Une entrepreneure ivoirienne gère sa boutique SUGU depuis son téléphone"
-            width={1600}
-            height={1400}
-            className="w-full h-auto object-cover"
-          />
+      <div className="relative grid lg:grid-cols-12 gap-8 items-end">
+        {/* Left column: monumental headline */}
+        <div className="lg:col-span-6 relative z-10">
+          <span className="chip">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-terracotta)" }} />
+            Plateforme SaaS ivoirienne · 100 % Mobile Money
+          </span>
+          <h1 className="mt-6 font-display leading-[0.92] tracking-tight text-[3.4rem] sm:text-[4.5rem] lg:text-[6rem]">
+            Votre business,
+            <br />
+            <em className="not-italic italic-serif" style={{ color: "var(--color-teal)", fontStyle: "italic" }}>
+              digitalisé
+            </em>
+            <br />
+            <span className="inline-flex items-baseline gap-3">
+              <span>et</span>
+              <em className="not-italic" style={{ color: "var(--color-terracotta)", fontStyle: "italic" }}>
+                sécurisé.
+              </em>
+            </span>
+          </h1>
+
+          <p className="mt-8 text-lg text-muted-foreground max-w-lg leading-relaxed">
+            Une boutique en ligne clé en main pour chaque entrepreneur ivoirien.
+            Nous bloquons l'argent sur un compte séquestre agréé BCEAO
+            <em> jusqu'à la livraison</em>. Plus jamais d'impayés.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a href="#cta" className="btn-primary">
+              Créer ma boutique — gratuit
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+            </a>
+            <a href="#fonctionnement" className="btn-ghost">Comment ça marche</a>
+          </div>
+
+          <div className="mt-10 flex items-center gap-6 text-sm">
+            <div className="flex -space-x-2">
+              <div className="h-9 w-9 rounded-full border-2 border-background" style={{ background: "var(--color-teal)" }} />
+              <div className="h-9 w-9 rounded-full border-2 border-background" style={{ background: "var(--color-terracotta)" }} />
+              <div className="h-9 w-9 rounded-full border-2 border-background" style={{ background: "var(--color-ochre)" }} />
+            </div>
+            <div className="text-muted-foreground">
+              <span className="font-display text-foreground">+2 000 marchands</span>
+              <br />
+              de Treichville à San-Pédro.
+            </div>
+          </div>
         </div>
-        <FloatingCard
-          className="absolute -left-4 bottom-6 md:-left-8"
-          title="Paiement escrow"
-          value="150 000 F"
-          hint="Bloqué jusqu'à validation"
-        />
-        <FloatingCard
-          className="absolute -right-4 top-8 md:-right-8"
-          title="Nouvelle commande"
-          value="Aïcha K."
-          hint="Marché vivrier · Abidjan"
-          tone="ochre"
-        />
+
+        {/* Right column: full illustration + overlays */}
+        <div className="lg:col-span-6 relative">
+          <div className="relative rounded-3xl overflow-hidden border grain" style={{ background: "var(--color-parchment-deep)" }}>
+            <img
+              src={heroIllustration}
+              alt="Une commerçante ivoirienne au marché d'Abidjan, tenant son smartphone SUGU"
+              width={1536}
+              height={1152}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+
+          {/* Stamp overlay */}
+          <div
+            className="stamp stamp-drop absolute -top-6 left-6 md:-left-8 bg-[color:var(--color-parchment)]"
+            aria-hidden
+          >
+            Paiement · Protégé · Escrow · BCEAO
+          </div>
+
+          {/* FCFA counter card */}
+          <div
+            className="absolute -bottom-8 -left-4 md:-left-10 rounded-2xl border p-5 shadow-soft w-64"
+            style={{ background: "var(--color-ink)", color: "var(--color-parchment)", borderColor: "oklch(1 0 0 / 0.1)" }}
+          >
+            <div className="text-[10px] uppercase tracking-widest opacity-70">Bloqué en séquestre</div>
+            <div className="font-display text-3xl mt-1">
+              150 000 <span className="text-base opacity-70">FCFA</span>
+            </div>
+            <div className="mt-3 h-1.5 rounded-full overflow-hidden" style={{ background: "oklch(1 0 0 / 0.1)" }}>
+              <div className="h-full w-3/4" style={{ background: "var(--color-terracotta)" }} />
+            </div>
+            <div className="mt-3 text-[11px] opacity-70">Libéré à la validation client</div>
+          </div>
+
+          {/* Merchant tag */}
+          <div
+            className="absolute -right-2 md:-right-6 top-10 rounded-full py-2 px-4 shadow-soft flex items-center gap-2 text-sm font-medium"
+            style={{ background: "var(--color-ochre)", color: "var(--color-ink)" }}
+          >
+            <span className="h-2 w-2 rounded-full bg-[color:var(--color-ink)]" />
+            Marché d'Adjamé
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function FloatingCard({
-  className = "",
-  title,
-  value,
-  hint,
-  tone = "teal",
-}: {
-  className?: string;
-  title: string;
-  value: string;
-  hint: string;
-  tone?: "teal" | "ochre";
-}) {
+function TickerTape() {
+  const items = [
+    "150 000 F · Marché vivrier · Adjamé",
+    "42 000 F · Transport VTC · Cocody",
+    "1 240 000 F · Immobilier · Yopougon",
+    "18 500 F · Santé · Treichville",
+    "310 000 F · Artisan · Bouaké",
+    "85 000 F · Restauration · Marcory",
+    "560 000 F · Éducation · San-Pédro",
+    "72 000 F · Vente wax · Plateau",
+  ];
+  const doubled = [...items, ...items];
   return (
-    <div className={`rounded-2xl bg-card border p-4 shadow-soft w-56 ${className}`}>
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <span
-          className="h-2 w-2 rounded-full"
-          style={{ background: tone === "teal" ? "var(--color-teal)" : "var(--color-ochre)" }}
-        />
-        {title}
+    <div className="ticker-tape border-y" aria-hidden>
+      <div className="ticker-track">
+        {doubled.map((t, i) => (
+          <span key={i} className="inline-flex items-center gap-3">
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ background: "var(--color-terracotta)" }}
+            />
+            {t}
+          </span>
+        ))}
       </div>
-      <div className="mt-1 font-display text-xl">{value}</div>
-      <div className="text-xs text-muted-foreground mt-1">{hint}</div>
     </div>
   );
 }
+
 
 function TrustStrip() {
   return (
@@ -275,6 +323,104 @@ function Sectors() {
     </section>
   );
 }
+
+function MerchantVoices() {
+  const voices = [
+    {
+      quote: "Avant SUGU, je perdais 3 clients sur 10 qui ne payaient jamais à la livraison. Aujourd'hui, l'argent est bloqué avant que je bouge.",
+      name: "Aïcha K.",
+      trade: "Marché vivrier",
+      city: "Adjamé",
+      tone: "teal",
+    },
+    {
+      quote: "Le sous-domaine ma-boutique.sugu.ci, ça fait pro. Mes clients à l'étranger commandent sans me connaître avant.",
+      name: "Kouamé D.",
+      trade: "Artisan bois",
+      city: "Bouaké",
+      tone: "terracotta",
+    },
+    {
+      quote: "Wave, Orange, MTN — tout passe sur la même boutique. Je ne cours plus après les preuves de paiement.",
+      name: "Mariam T.",
+      trade: "Boutique wax",
+      city: "Yopougon",
+      tone: "ochre",
+    },
+  ];
+
+  const bg = (tone: string) =>
+    tone === "teal" ? "var(--color-teal-deep)" :
+    tone === "terracotta" ? "var(--color-terracotta)" :
+    "var(--color-ochre)";
+
+  return (
+    <section className="py-24" style={{ background: "var(--color-ink)", color: "var(--color-parchment)" }}>
+      <div className="container-page">
+        <div className="masthead-rule mb-10" style={{ color: "oklch(0.85 0.02 85 / 0.6)" }}>
+          <span>N° 02</span>
+          <span>Voix du marché</span>
+          <span>Témoignages certifiés</span>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
+          <div>
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              Ceux qui vendent
+              <br />
+              <em style={{ color: "var(--color-terracotta)" }}>en dorment mieux.</em>
+            </h2>
+            <p className="mt-6 text-lg opacity-80 max-w-md">
+              +2 000 marchands utilisent SUGU chaque semaine.
+              Voici trois voix — parmi douze secteurs, quatre villes, une seule promesse.
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              <div className="stamp" style={{ background: "transparent", color: "var(--color-terracotta)" }}>
+                Escrow · BCEAO · 2013-450
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            {voices.map((v, i) => (
+              <figure
+                key={v.name}
+                className="rounded-2xl p-6 md:p-8 relative"
+                style={{
+                  background: bg(v.tone),
+                  color: v.tone === "ochre" ? "var(--color-ink)" : "var(--color-parchment)",
+                  transform: i % 2 === 0 ? "translateX(0)" : "translateX(2rem)",
+                }}
+              >
+                <div className="text-5xl font-display leading-none opacity-40 absolute top-4 left-5" aria-hidden>"</div>
+                <blockquote className="font-display text-xl md:text-2xl leading-snug pl-8">
+                  {v.quote}
+                </blockquote>
+                <figcaption className="mt-5 pl-8 flex items-center gap-3 text-sm">
+                  <span
+                    className="inline-flex h-9 w-9 rounded-full items-center justify-center font-display"
+                    style={{
+                      background: "oklch(1 0 0 / 0.15)",
+                      color: "inherit",
+                    }}
+                  >
+                    {v.name[0]}
+                  </span>
+                  <span>
+                    <span className="font-semibold">{v.name}</span>
+                    <span className="opacity-70"> · {v.trade} · {v.city}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 
 function HowItWorks() {
   const steps = [
