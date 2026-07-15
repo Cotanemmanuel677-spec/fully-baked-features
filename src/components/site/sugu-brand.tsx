@@ -116,31 +116,7 @@ export function ButtonAnchor({
   );
 }
 
-/** Lien interne TanStack (typé) */
-export function ButtonRoute({
-  children,
-  to,
-  params,
-  variant = "primary",
-  className = "",
-  style,
-}: {
-  children: ReactNode;
-  to: string;
-  params?: Record<string, string>;
-  variant?: ButtonVariant;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  return (
-    // @ts-expect-error — Link "to" est typé strictement, on l'utilise en générique ici
-    <Link
-      to={to}
-      params={params}
-      style={style}
-      className={`${baseButton} ${variantClasses[variant]} ${className}`}
-    >
-      {children}
-    </Link>
-  );
-}
+export { Link };
+export const buttonBase = baseButton;
+export const buttonVariants = variantClasses;
+
