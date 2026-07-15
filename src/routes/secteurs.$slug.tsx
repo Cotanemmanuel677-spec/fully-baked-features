@@ -1,6 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Check,
+  ChevronRight,
+  ShieldCheck,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { Container, ButtonAnchor } from "@/components/site/sugu-brand";
 import { sectors, sectorsBySlug, type Sector } from "@/lib/sectors";
+import { getSectorVisual, type SectorVisual } from "@/lib/sector-visuals";
 
 export const Route = createFileRoute("/secteurs/$slug")({
   loader: ({ params }) => {
@@ -56,247 +67,485 @@ export const Route = createFileRoute("/secteurs/$slug")({
   component: SectorPage,
   notFoundComponent: () => (
     <SiteChrome>
-      <div className="container-page py-24 text-center">
-        <h1 className="text-3xl font-display">Ce secteur n'existe pas.</h1>
-        <Link to="/secteurs" className="btn-primary mt-6 inline-flex">
+      <Container className="py-24 text-center">
+        <h1 className="text-3xl font-black text-[#0B2D6D]">Ce secteur n&apos;existe pas.</h1>
+        <Link
+          to="/secteurs"
+          className="mt-6 inline-flex rounded-2xl bg-[#F5821F] px-5 py-3 text-sm font-extrabold text-white"
+        >
           Voir tous les secteurs
         </Link>
-      </div>
+      </Container>
     </SiteChrome>
   ),
   errorComponent: () => (
     <SiteChrome>
-      <div className="container-page py-24 text-center">
-        <h1 className="text-3xl font-display">Ce secteur n'a pas pu se charger.</h1>
-      </div>
+      <Container className="py-24 text-center">
+        <h1 className="text-3xl font-black text-[#0B2D6D]">
+          Ce secteur n&apos;a pas pu se charger.
+        </h1>
+      </Container>
     </SiteChrome>
   ),
 });
 
 function SectorPage() {
   const { sector } = Route.useLoaderData();
+  const visual = getSectorVisual(sector.slug);
   return (
     <SiteChrome>
-      <SectorHero sector={sector} />
-      <SectorUseCases sector={sector} />
-      <SectorPlans sector={sector} />
-      <SectorCommission sector={sector} />
+      <SectorHero sector={sector} visual={visual} />
+      <SectorUseCases sector={sector} visual={visual} />
+      <SectorPlans sector={sector} visual={visual} />
+      {sector.extras && sector.extras.length > 0 && (
+        <SectorExtras sector={sector} visual={visual} />
+      )}
+      <SectorCTA sector={sector} visual={visual} />
       <RelatedSectors currentSlug={sector.slug} />
     </SiteChrome>
   );
 }
 
-function SectorHero({ sector }: { sector: Sector }) {
+/* ---------------- HERO ---------------- */
+
+function SectorHero({ sector, visual }: { sector: Sector; visual: SectorVisual }) {
+  const { color, tint, Icon } = visual;
   return (
-    <section className="container-page pt-8 pb-12 lg:pt-14 lg:pb-16">
-      <Link
-        to="/secteurs"
-        className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-      >
-        ← Tous les secteurs
-      </Link>
-      <div className="mt-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-        <div>
-          <span className="chip">
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: "var(--color-teal)" }}
-            />
-            Secteur · Commission {sector.commissionRate}
-          </span>
-          <div className="mt-5 flex items-center gap-4">
-            <span className="text-5xl" aria-hidden>{sector.emoji}</span>
-            <h1 className="text-4xl md:text-5xl font-display leading-[1.05]">{sector.name}</h1>
-          </div>
-          <p className="mt-6 text-lg text-muted-foreground max-w-xl">{sector.short}</p>
-          <p className="mt-3 text-base text-foreground/80 max-w-xl">{sector.description}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#cta" className="btn-primary">Créer ma boutique {sector.name}</a>
-            <a href="#tarifs" className="btn-ghost">Voir les plans</a>
-          </div>
-        </div>
-        <aside className="rounded-3xl border bg-card p-6 shadow-soft">
-          <div className="text-xs text-muted-foreground uppercase tracking-wider">Pour qui</div>
-          <p className="mt-2 text-base">{sector.audience}</p>
-          <hr className="my-5 border-border" />
-          <div className="text-xs text-muted-foreground uppercase tracking-wider">Commission</div>
-          <div className="mt-2 font-display text-3xl" style={{ color: "var(--color-teal)" }}>
-            {sector.commissionRate}
-          </div>
-          <p className="text-sm text-muted-foreground mt-1">{sector.commissionCategory}</p>
-          {sector.extras && sector.extras.length > 0 && (
-            <>
-              <hr className="my-5 border-border" />
-              <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                Modules et garanties
+    <section className="relative overflow-hidden bg-white pt-10 pb-16">
+      {/* halos couleur du secteur */}
+      <div
+        className="pointer-events-none absolute -left-32 top-0 h-[520px] w-[520px] rounded-full blur-3xl"
+        style={{ backgroundColor: `${color}14` }}
+      />
+      <div
+        className="pointer-events-none absolute -right-32 top-24 h-[420px] w-[420px] rounded-full blur-3xl"
+        style={{ backgroundColor: `${color}10` }}
+      />
+      <Container className="relative">
+        {/* fil d’ariane */}
+        <nav className="flex items-center gap-1.5 text-sm font-semibold text-[#64748B]">
+          <Link to="/" className="hover:text-[#0B2D6D]">
+            Accueil
+          </Link>
+          <ChevronRight size={14} />
+          <Link to="/secteurs" className="hover:text-[#0B2D6D]">
+            Secteurs
+          </Link>
+          <ChevronRight size={14} />
+          <span className="text-[#0B2D6D]">{sector.name}</span>
+        </nav>
+
+        <div className="mt-10 grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+          {/* colonne gauche : titre + intro */}
+          <div>
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold"
+              style={{ backgroundColor: tint, color }}
+            >
+              <Sparkles size={15} />
+              Secteur SUGU · Commission {sector.commissionRate}
+            </div>
+
+            <div className="mt-7 flex items-center gap-5">
+              <div
+                className="flex h-20 w-20 items-center justify-center rounded-3xl shadow-[0_18px_45px_rgba(11,45,109,0.12)]"
+                style={{ backgroundColor: tint, color }}
+              >
+                <Icon size={38} />
               </div>
-              <ul className="mt-2 space-y-1 text-sm">
-                {sector.extras.map((e) => (
-                  <li key={e} className="flex gap-2">
-                    <span aria-hidden style={{ color: "var(--color-ochre)" }}>◆</span>
-                    <span>{e}</span>
-                  </li>
-                ))}
+              <h1
+                className="text-4xl font-black leading-[1.02] tracking-[-0.045em] text-[#081A3D] sm:text-5xl lg:text-[3.5rem]"
+              >
+                {sector.name}
+              </h1>
+            </div>
+
+            <p className="mt-7 max-w-xl text-xl font-semibold leading-8 text-[#334155]">
+              {sector.short}
+            </p>
+            <p className="mt-4 max-w-xl text-base leading-8 text-[#64748B]">
+              {sector.description}
+            </p>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <ButtonAnchor
+                href="#inscription"
+                variant="sector"
+                style={{
+                  backgroundColor: color,
+                  boxShadow: `0 16px 35px ${color}40`,
+                }}
+                className="px-6 py-4"
+              >
+                Créer ma boutique {sector.name}
+                <ArrowRight size={18} />
+              </ButtonAnchor>
+              <ButtonAnchor href="#tarifs" variant="secondary" className="px-6 py-4">
+                Voir les plans
+                <span
+                  className="flex h-7 w-7 items-center justify-center rounded-full"
+                  style={{ backgroundColor: tint, color }}
+                >
+                  <ArrowRight size={15} />
+                </span>
+              </ButtonAnchor>
+            </div>
+
+            <p className="mt-5 text-sm font-semibold text-[#64748B]">
+              Aucun paiement demandé · Sous-domaine{" "}
+              <span className="text-[#0B2D6D]">maboutique.sugu.ci</span> offert
+            </p>
+          </div>
+
+          {/* colonne droite : carte de synthèse */}
+          <aside className="relative">
+            <div
+              className="absolute -inset-4 -z-10 rounded-[2.5rem] blur-2xl"
+              style={{ backgroundColor: `${color}18` }}
+            />
+            <div className="rounded-[2rem] border border-[#0B2D6D]/10 bg-white p-7 shadow-[0_24px_70px_rgba(11,45,109,0.12)]">
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-11 w-11 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: tint, color }}
+                >
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <div className="text-xs font-black uppercase tracking-[0.2em] text-[#64748B]">
+                    Commission tout compris
+                  </div>
+                  <div className="text-3xl font-black" style={{ color }}>
+                    {sector.commissionRate}
+                  </div>
+                </div>
+              </div>
+              <p className="mt-3 text-sm font-medium leading-6 text-[#64748B]">
+                {sector.commissionCategory}
+              </p>
+
+              <hr className="my-6 border-[#0B2D6D]/10" />
+
+              <div className="text-xs font-black uppercase tracking-[0.2em] text-[#64748B]">
+                Pour qui
+              </div>
+              <p className="mt-2 text-base font-semibold leading-7 text-[#0B2D6D]">
+                {sector.audience}
+              </p>
+
+              <hr className="my-6 border-[#0B2D6D]/10" />
+
+              <ul className="space-y-3 text-sm font-medium text-[#334155]">
+                <li className="flex items-start gap-2">
+                  <BadgeCheck size={18} style={{ color }} className="mt-0.5 shrink-0" />
+                  Paiement Mobile Money sous séquestre
+                </li>
+                <li className="flex items-start gap-2">
+                  <BadgeCheck size={18} style={{ color }} className="mt-0.5 shrink-0" />
+                  Modules métier prêts à l&apos;emploi
+                </li>
+                <li className="flex items-start gap-2">
+                  <BadgeCheck size={18} style={{ color }} className="mt-0.5 shrink-0" />
+                  Sous-domaine <span className="text-[#0B2D6D]">.sugu.ci</span> offert
+                </li>
               </ul>
-            </>
-          )}
-        </aside>
-      </div>
+            </div>
+          </aside>
+        </div>
+      </Container>
     </section>
   );
 }
 
-function SectorUseCases({ sector }: { sector: Sector }) {
+/* ---------------- CAS D’USAGE ---------------- */
+
+function SectorUseCases({ sector, visual }: { sector: Sector; visual: SectorVisual }) {
+  const { color, tint } = visual;
   return (
-    <section className="py-16" style={{ background: "var(--color-parchment-deep)" }}>
-      <div className="container-page">
+    <section className="bg-[#F8FAFC] py-20">
+      <Container>
         <div className="max-w-2xl">
-          <span className="chip">Ce que vous ferez avec SUGU {sector.name}</span>
-          <h2 className="mt-4 text-3xl md:text-4xl font-display">Cas d'usage clés</h2>
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold"
+            style={{ backgroundColor: tint, color }}
+          >
+            <Star size={14} fill="currentColor" />
+            Ce que vous ferez avec SUGU {sector.name}
+          </div>
+          <h2 className="mt-5 text-3xl font-black tracking-[-0.03em] text-[#0B2D6D] sm:text-4xl">
+            Cas d&apos;usage clés
+          </h2>
         </div>
-        <div className="mt-10 grid sm:grid-cols-2 gap-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
           {sector.useCases.map((u, i) => (
-            <div key={u} className="rounded-2xl bg-card border p-5 flex gap-4">
+            <div
+              key={u}
+              className="flex gap-4 rounded-3xl border border-[#0B2D6D]/10 bg-white p-6 shadow-[0_14px_35px_rgba(11,45,109,0.06)] transition hover:-translate-y-0.5"
+            >
               <div
-                className="shrink-0 h-10 w-10 rounded-xl grid place-items-center font-display"
-                style={{ background: "var(--color-teal-soft)", color: "oklch(0.28 0.05 200)" }}
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-lg font-black"
+                style={{ backgroundColor: tint, color }}
               >
                 {String(i + 1).padStart(2, "0")}
               </div>
-              <p className="text-sm md:text-base pt-1">{u}</p>
+              <p className="pt-1 text-base font-semibold leading-7 text-[#0B2D6D]">{u}</p>
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
 
-function SectorPlans({ sector }: { sector: Sector }) {
+/* ---------------- PLANS ---------------- */
+
+function SectorPlans({ sector, visual }: { sector: Sector; visual: SectorVisual }) {
+  const { color, tint } = visual;
   return (
-    <section id="tarifs" className="container-page py-20">
-      <div className="max-w-2xl">
-        <span className="chip">Freemium honnête</span>
-        <h2 className="mt-4 text-3xl md:text-4xl font-display">Plans pour {sector.name}</h2>
-        <p className="mt-3 text-muted-foreground">
-          Commencez gratuitement, passez au plan payant quand vos volumes le justifient.
-          −10 % en paiement annuel, −20 % en biennal.
-        </p>
-      </div>
-      <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {sector.plans.map((p) => {
-          const highlight = p.name === "Pro";
-          return (
-            <article
-              key={p.name}
-              className="rounded-2xl p-6 flex flex-col border"
-              style={
-                highlight
-                  ? {
-                      background: "linear-gradient(180deg, var(--color-teal), oklch(0.42 0.08 200))",
-                      color: "var(--color-primary-foreground)",
-                      borderColor: "transparent",
-                    }
-                  : { background: "var(--color-card)" }
-              }
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="font-display text-xl">{p.name}</h3>
+    <section id="tarifs" className="bg-white py-20">
+      <Container>
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#0B2D6D]/10 bg-white px-4 py-2 text-sm font-extrabold text-[#0B2D6D]">
+            Freemium honnête
+          </div>
+          <h2 className="mt-5 text-3xl font-black tracking-[-0.03em] text-[#0B2D6D] sm:text-4xl">
+            Plans pour {sector.name}
+          </h2>
+          <p className="mt-4 text-base font-medium leading-7 text-[#64748B]">
+            Commencez gratuitement, passez au plan payant quand vos volumes le
+            justifient. −10 % en paiement annuel, −20 % en biennal.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {sector.plans.map((p) => {
+            const highlight = p.name === "Pro";
+            return (
+              <article
+                key={p.name}
+                className="relative flex flex-col overflow-hidden rounded-3xl border p-6 transition hover:-translate-y-1"
+                style={
+                  highlight
+                    ? {
+                        backgroundColor: color,
+                        borderColor: color,
+                        color: "#fff",
+                        boxShadow: `0 26px 60px ${color}55`,
+                      }
+                    : {
+                        backgroundColor: "#fff",
+                        borderColor: "rgba(11,45,109,0.10)",
+                        boxShadow: "0 14px 35px rgba(11,45,109,0.06)",
+                      }
+                }
+              >
                 {highlight && (
-                  <span
-                    className="text-[11px] uppercase tracking-wider px-2 py-1 rounded-full"
-                    style={{ background: "oklch(1 0 0 / 0.18)" }}
-                  >
+                  <span className="absolute right-5 top-5 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em]">
                     Recommandé
                   </span>
                 )}
-              </div>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="font-display text-4xl">
-                  {p.price === "0" ? "0" : p.price}
-                </span>
-                <span className={`text-sm ${highlight ? "opacity-90" : "text-muted-foreground"}`}>
-                  FCFA / mois
-                </span>
-              </div>
-              <p className={`text-sm mt-3 ${highlight ? "opacity-95" : "text-muted-foreground"}`}>
-                {p.inclusions}
-              </p>
-            </article>
-          );
-        })}
-      </div>
-      {sector.fieldNote && (
-        <div className="mt-8 rounded-2xl border-l-4 p-5 bg-card" style={{ borderColor: "var(--color-ochre)" }}>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">Note de terrain</div>
-          <p className="mt-1 text-sm md:text-base">{sector.fieldNote}</p>
+                <h3
+                  className="text-xl font-black"
+                  style={{ color: highlight ? "#fff" : "#0B2D6D" }}
+                >
+                  {p.name}
+                </h3>
+                <div className="mt-5 flex items-baseline gap-1">
+                  <span className="text-4xl font-black">
+                    {p.price === "0" ? "0" : p.price}
+                  </span>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: highlight ? "rgba(255,255,255,0.85)" : "#64748B" }}
+                  >
+                    FCFA / mois
+                  </span>
+                </div>
+                <p
+                  className="mt-4 text-sm font-medium leading-6"
+                  style={{ color: highlight ? "rgba(255,255,255,0.92)" : "#334155" }}
+                >
+                  {p.inclusions}
+                </p>
+                <a
+                  href="#inscription"
+                  className="mt-7 inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-extrabold transition"
+                  style={
+                    highlight
+                      ? { backgroundColor: "#fff", color }
+                      : { backgroundColor: tint, color }
+                  }
+                >
+                  Choisir {p.name}
+                  <ArrowRight size={16} />
+                </a>
+              </article>
+            );
+          })}
         </div>
-      )}
+
+        {sector.fieldNote && (
+          <div
+            className="mt-10 flex gap-4 rounded-3xl border-l-4 bg-[#F8FAFC] p-6"
+            style={{ borderColor: color }}
+          >
+            <div
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
+              style={{ backgroundColor: tint, color }}
+            >
+              <Sparkles size={18} />
+            </div>
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.2em] text-[#64748B]">
+                Note de terrain
+              </div>
+              <p className="mt-1 text-base font-medium leading-7 text-[#0B2D6D]">
+                {sector.fieldNote}
+              </p>
+            </div>
+          </div>
+        )}
+      </Container>
     </section>
   );
 }
 
-function SectorCommission({ sector }: { sector: Sector }) {
+/* ---------------- EXTRAS / MODULES ---------------- */
+
+function SectorExtras({ sector, visual }: { sector: Sector; visual: SectorVisual }) {
+  const { color, tint } = visual;
+  if (!sector.extras) return null;
   return (
-    <section className="container-page pb-24">
-      <div
-        id="cta"
-        className="rounded-3xl p-10 md:p-14 relative overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, var(--color-teal), oklch(0.4 0.08 205))",
-          color: "var(--color-primary-foreground)",
-        }}
-      >
-        <h2 className="font-display text-3xl md:text-4xl leading-tight max-w-2xl">
-          Ouvrez votre boutique {sector.name} aujourd'hui.
-        </h2>
-        <p className="mt-4 opacity-90 max-w-2xl">
-          Commission {sector.commissionRate} tout compris (fonds de garantie inclus). Aucun
-          paiement demandé pour commencer. Sous-domaine{" "}
-          <span className="font-medium">maboutique.sugu.ci</span> offert.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href="#"
-            className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold"
-            style={{ background: "var(--color-primary-foreground)", color: "var(--color-teal)" }}
+    <section className="bg-[#F8FAFC] py-16">
+      <Container>
+        <div className="max-w-2xl">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold"
+            style={{ backgroundColor: tint, color }}
           >
-            Créer ma boutique gratuitement
-          </a>
-          <a
-            href="#"
-            className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold border"
-            style={{ borderColor: "oklch(1 0 0 / 0.4)" }}
-          >
-            Parler à un conseiller
-          </a>
+            Modules et garanties
+          </div>
+          <h2 className="mt-5 text-2xl font-black tracking-[-0.02em] text-[#0B2D6D] sm:text-3xl">
+            En option pour aller plus loin
+          </h2>
         </div>
-      </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sector.extras.map((e) => (
+            <div
+              key={e}
+              className="flex items-start gap-3 rounded-2xl border border-[#0B2D6D]/10 bg-white p-5 shadow-[0_10px_28px_rgba(11,45,109,0.05)]"
+            >
+              <div
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                style={{ backgroundColor: tint, color }}
+              >
+                <Check size={18} strokeWidth={3} />
+              </div>
+              <p className="pt-1 text-sm font-semibold leading-6 text-[#0B2D6D]">{e}</p>
+            </div>
+          ))}
+        </div>
+      </Container>
     </section>
   );
 }
+
+/* ---------------- CTA FINAL ---------------- */
+
+function SectorCTA({ sector, visual }: { sector: Sector; visual: SectorVisual }) {
+  const { color } = visual;
+  return (
+    <section id="inscription" className="bg-white py-20">
+      <Container>
+        <div
+          className="relative overflow-hidden rounded-[2.5rem] p-10 sm:p-14"
+          style={{
+            background: `linear-gradient(135deg, ${color} 0%, #0B2D6D 100%)`,
+            color: "#fff",
+          }}
+        >
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <div className="relative max-w-3xl">
+            <h2 className="text-3xl font-black leading-tight tracking-[-0.03em] sm:text-4xl lg:text-5xl">
+              Ouvrez votre boutique {sector.name} aujourd&apos;hui.
+            </h2>
+            <p className="mt-5 max-w-2xl text-lg font-semibold leading-8 text-white/90">
+              Commission {sector.commissionRate} tout compris (fonds de garantie inclus).
+              Aucun paiement demandé pour commencer. Sous-domaine{" "}
+              <span className="font-black">maboutique.sugu.ci</span> offert.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-sm font-extrabold text-[#0B2D6D] shadow-[0_16px_35px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5"
+              >
+                Créer ma boutique gratuitement
+                <ArrowRight size={18} />
+              </a>
+              <a
+                href="#"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/40 px-6 py-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/10"
+              >
+                Parler à un conseiller
+              </a>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ---------------- SECTEURS LIÉS ---------------- */
 
 function RelatedSectors({ currentSlug }: { currentSlug: string }) {
   const others = sectors.filter((s) => s.slug !== currentSlug).slice(0, 4);
   return (
-    <section className="container-page pb-20">
-      <h2 className="text-2xl font-display">Autres secteurs SUGU</h2>
-      <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {others.map((s) => (
+    <section className="bg-[#F8FAFC] py-16">
+      <Container>
+        <div className="flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-black tracking-[-0.02em] text-[#0B2D6D] sm:text-3xl">
+            Autres secteurs SUGU
+          </h2>
           <Link
-            key={s.slug}
-            to="/secteurs/$slug"
-            params={{ slug: s.slug }}
-            className="rounded-2xl border bg-card p-5 hover:-translate-y-0.5 hover:shadow-soft transition-all"
+            to="/secteurs"
+            className="hidden items-center gap-1 text-sm font-extrabold text-[#F5821F] hover:gap-2 sm:inline-flex"
           >
-            <div className="text-2xl">{s.emoji}</div>
-            <div className="mt-2 font-display text-lg">{s.name}</div>
-            <div className="text-sm text-muted-foreground mt-1">
-              Commission {s.commissionRate}
-            </div>
+            Voir les 12 secteurs <ArrowRight size={16} />
           </Link>
-        ))}
-      </div>
+        </div>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {others.map((s) => {
+            const v = getSectorVisual(s.slug);
+            const IconComp = v.Icon;
+            return (
+              <Link
+                key={s.slug}
+                to="/secteurs/$slug"
+                params={{ slug: s.slug }}
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-[#0B2D6D]/10 bg-white p-6 transition hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(11,45,109,0.12)]"
+              >
+                <div
+                  className="absolute inset-x-0 top-0 h-1"
+                  style={{ backgroundColor: v.color }}
+                  aria-hidden
+                />
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: v.tint, color: v.color }}
+                >
+                  <IconComp size={22} />
+                </div>
+                <div className="mt-4 text-lg font-black text-[#0B2D6D]">{s.name}</div>
+                <div className="mt-1 text-sm font-medium text-[#64748B]">
+                  Commission {s.commissionRate}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </Container>
     </section>
   );
 }
